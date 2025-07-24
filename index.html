@@ -230,23 +230,39 @@
         }
         
         function downloadApp() {
-            // Create a temporary invisible link
-            const link = document.createElement('a');
-            link.style.display = 'none';
+            // Show loading state
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = '<p>Preparing download...</p>';
             
-            // Set the GitHub raw URL and force download
-            link.href = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/main/app/greenhat.bat';
-            link.download = 'greenhat.bat';  // This tells browser to download rather than display
-            
-            // Add to document and trigger click
-            document.body.appendChild(link);
-            link.click();
-            
-            // Clean up
-            setTimeout(() => {
-                document.body.removeChild(link);
-                closeModal();
-            }, 100);
+            // Fetch the file content
+            fetch('https://raw.githubusercontent.com/MrInc0gnito/green-hat/main/app/greenhat.bat')
+                .then(response => response.text())
+                .then(content => {
+                    // Create a Blob with the file content
+                    const blob = new Blob([content], { type: 'application/batch' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create and trigger download link
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'greenhat.bat';
+                    document.body.appendChild(link);
+                    link.click();
+                    
+                    // Clean up
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        closeModal();
+                    }, 100);
+                })
+                .catch(error => {
+                    modalContent.innerHTML = `
+                        <p style="color:red">Download failed!</p>
+                        <p>You can <a href="https://raw.githubusercontent.com/MrInc0gnito/green-hat/main/app/greenhat.bat" target="_blank">download manually here</a></p>
+                        <button onclick="closeModal()">Close</button>
+                    `;
+                });
         }
     </script>
 </body>
