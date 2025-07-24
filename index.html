@@ -230,21 +230,23 @@
         }
         
         function downloadApp() {
-            // Create a hidden iframe to download from GitHub
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/refs/heads/main/app/greenhat.bat';
-            document.body.appendChild(iframe);
+            // Create a temporary invisible link
+            const link = document.createElement('a');
+            link.style.display = 'none';
             
-            // Also provide a direct link as fallback
+            // Set the GitHub raw URL and force download
+            link.href = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/main/app/greenhat.bat';
+            link.download = 'greenhat.bat';  // This tells browser to download rather than display
+            
+            // Add to document and trigger click
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up
             setTimeout(() => {
-                const a = document.createElement('a');
-                a.href = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/refs/heads/main/app/greenhat.bat';
-                a.download = 'greenhat.bat';
-                a.click();
-            }, 500);
-            
-            closeModal();
+                document.body.removeChild(link);
+                closeModal();
+            }, 100);
         }
     </script>
 </body>
