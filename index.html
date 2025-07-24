@@ -230,17 +230,246 @@
         }
         
         function downloadApp() {
-            // Create a dummy file for download
-            const blob = new Blob(["@echo off\n\necho Welcome to Green Hat!\necho This would be the actual application\npause"], {type: 'application/bat'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'greenhat.bat';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            // Redirect to the GitHub raw file URL
+            window.location.href = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/refs/heads/main/app/greenhat.bat';
+            closeModal();
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+    <title>Green Hat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #000;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+            background-image: url('https://web.archive.org/web/19981212045428if_/http://www.geocities.com/vienna/strasse/1232/bg.gif');
+        }
+        .container {
+            width: 600px;
+            margin: 0 auto;
+            background-color: #e0e0e0;
+            padding: 20px;
+            border: 1px solid #999;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .logo {
+            margin: 20px 0;
+        }
+        .logo img {
+            width: 300px;
+        }
+        .hat-image img {
+            width: 200px;
+            margin: 10px 0;
+            border: 1px solid #999;
+        }
+        .install-button {
+            background-color: #008000;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 20px 0;
+            cursor: pointer;
+            border: 2px outset #00aa00;
+            font-weight: bold;
+        }
+        .install-button:hover {
+            background-color: #006600;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+        }
+        .flag {
+            width: 25px;
+            height: 25px;
+            margin: 0 3px;
+            vertical-align: middle;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            font-family: Arial;
+        }
+        .modal-buttons {
+            margin-top: 20px;
+        }
+        .modal-button {
+            padding: 5px 15px;
+            margin: 0 10px;
+            background-color: #008000;
+            color: white;
+            border: 2px outset #00aa00;
+            cursor: pointer;
+        }
+        .modal-button:hover {
+            background-color: #006600;
+        }
+        a {
+            color: #0000EE;
+            text-decoration: underline;
+        }
+        a:visited {
+            color: #551A8B;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #999;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.ibb.co/ds6hywPz/sec-New-Project.png" alt="Green Hat Logo">
+        </div>
+        
+        <p><strong>Green hat is the future, hello world.</strong></p>
+        
+        <hr>
+        
+        <button class="install-button" onclick="openInstaller()">Open Installer</button>
+        
+        <p>Different hat types:</p>
+        <div class="hat-image">
+            <img src="https://media.licdn.com/dms/image/D4E12AQFpTsx3qAM2vg/article-cover_image-shrink_720_1280/0/1662637383336?e=2147483647&v=beta&t=GzvuGy_anK8HJMb5Nw9Pg4C3KHOPnARDZTgNinLbgoc" alt="Hat Types">
+        </div>
+        
+        <p><a href="https://www.privacysense.net/terms/green-hat-hacker/">Green hacker in more context?</a></p>
+        
+        <hr>
+        
+        <div class="footer">
+            <p>Made in England <img src="https://static.vecteezy.com/system/resources/previews/015/081/930/large_2x/england-3d-rounded-flag-with-transparent-background-free-png.png" alt="England Flag" class="flag"></p>
+            <p>Made for: 
+                <img src="https://static.vecteezy.com/system/resources/previews/015/081/930/large_2x/england-3d-rounded-flag-with-transparent-background-free-png.png" alt="England Flag" class="flag">
+                <img src="https://static.vecteezy.com/system/resources/previews/015/272/052/original/china-3d-rounded-flag-with-transparent-background-free-png.png" alt="China Flag" class="flag">
+                <img src="https://www.nicepng.com/png/full/190-1909755_france-flag-3d-round-xl-france-flag-icon.png" alt="France Flag" class="flag">
+            </p>
+        </div>
+    </div>
+
+    <!-- Installer Modal -->
+    <div id="installerModal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <!-- Content will be filled by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        
+        function openInstaller() {
+            currentStep = 1;
+            showStep();
+            document.getElementById('installerModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('installerModal').style.display = 'none';
+        }
+        
+        function goBack() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep();
+            }
+        }
+        
+        function nextStep() {
+            currentStep++;
+            showStep();
+        }
+        
+        function showStep() {
+            const modalContent = document.getElementById('modalContent');
             
+            if (currentStep === 1) {
+                modalContent.innerHTML = `
+                    <h2>Green Hat Installer</h2>
+                    <p>Are you ready to start the installation?</p>
+                    <div class="modal-buttons">
+                        <button class="modal-button" onclick="closeModal()">Exit</button>
+                        <button class="modal-button" onclick="nextStep()">Continue</button>
+                    </div>
+                `;
+            } else if (currentStep === 2) {
+                modalContent.innerHTML = `
+                    <h2>Terms of Service</h2>
+                    <p>You solely are responsible for what you use Green Hat for, this is a open source project and is protected by UK laws.</p>
+                    <p><input type="checkbox" id="tosCheckbox"> I agree to the terms</p>
+                    <div class="modal-buttons">
+                        <button class="modal-button" onclick="goBack()">Back</button>
+                        <button class="modal-button" onclick="checkTos()">Proceed</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function checkTos() {
+            if (document.getElementById('tosCheckbox').checked) {
+                checkSystem();
+            } else {
+                alert("You must accept the terms to proceed.");
+            }
+        }
+        
+        function checkSystem() {
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <h2>System Check</h2>
+                <p>We're checking your system...</p>
+                <div id="systemCheckResult"></div>
+            `;
+            
+            // Simulate system check
+            setTimeout(() => {
+                // This is a simulation - in reality we'd detect the actual OS
+                const isWindows = navigator.userAgent.indexOf('Windows') !== -1;
+                const resultDiv = document.getElementById('systemCheckResult');
+                
+                if (isWindows) {
+                    resultDiv.innerHTML = `
+                        <p>✓ Windows system detected</p>
+                        <p>System check successful!</p>
+                        <button class="modal-button" onclick="downloadApp()">Download greenhat.bat</button>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p style="color: red;">✗ Your system is not supported!</p>
+                        <p>Green Hat only works on Windows systems.</p>
+                        <button class="modal-button" onclick="closeModal()">Close</button>
+                    `;
+                }
+            }, 1500);
+        }
+        
+        function downloadApp() {
+            // Redirect to the GitHub raw file URL
+            window.location.href = 'https://raw.githubusercontent.com/MrInc0gnito/green-hat/refs/heads/main/app/greenhat.bat';
             closeModal();
         }
     </script>
